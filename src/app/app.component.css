@@ -1,0 +1,39 @@
+div.gw2-item {
+  width: 64px;
+  height: 64px;
+  border: 3px solid brown;
+  background-color: black;
+  display: inline-block;
+  margin: 2px 2px;
+  vertical-align: top;
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+
+.gw2-item-count {
+  margin: 5px 5px;
+  color: white;
+  text-shadow: -2px 0 black, 0 2px black, 2px 0 black, 0 -2px black;
+}
+
+.gw2-stat {
+  color: lawngreen;
+}
+
+div.gw2-item-junk { border-color: lightgray; }
+div.gw2-item-basic { border-color: whitesmoke; }
+div.gw2-item-fine { border-color: dodgerblue; }
+div.gw2-item-masterwork { border-color: limegreen; }
+div.gw2-item-rare { border-color: yellow; }
+div.gw2-item-exotic { border-color: darkorange; }
+div.gw2-item-ascended { border-color: deeppink; }
+div.gw2-item-legendary { border-color: mediumpurple; }
+
+tr.gw2-item-junk { background-color: lightgray; }
+tr.gw2-item-basic { background-color: whitesmoke; }
+tr.gw2-item-fine { background-color: dodgerblue; }
+tr.gw2-item-masterwork { background-color: limegreen; }
+tr.gw2-item-rare { background-color: yellow; }
+tr.gw2-item-exotic { background-color: darkorange; }
+tr.gw2-item-ascended { background-color: deeppink; }
+tr.gw2-item-legendary { background-color: mediumpurple; }
