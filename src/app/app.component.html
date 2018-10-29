@@ -1,6 +1,13 @@
 <!--The content below is only a placeholder and can be replaced.-->
 <div class="container">
-  <h1>Guild Wars 2 items viewer</h1>
+  <h1>Guild Wars 2 Item Inspector</h1>
+
+  <div class="input-group mb-3">
+    <input type="text" class="form-control" placeholder="API Key" [formControl]="apiKey">
+    <div class="input-group-append">
+      <button class="btn btn-primary" type="button" (click)="updateApiKey()">Save the Key to browser storage<br><small>nothing's gonnna be uploaded anywhere</small></button>
+    </div>
+  </div>
 
   <ngb-tabset type="pills">
     <ngb-tab title="Per storage">

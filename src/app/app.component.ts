@@ -7,7 +7,6 @@ import { catchError, map, tap } from 'rxjs/operators';
 import { of } from 'rxjs/observable/of';
 import 'rxjs/add/observable/forkJoin';
 import 'rxjs/add/operator/debounceTime';
-import { ApiStatus } from './apiStatus';
 import { Character, Item, ItemView, Stat, StatsView } from './gw2-models';
 
 import * as jQuery from 'jquery';
@@ -81,15 +80,6 @@ const WEAPON_TYPES = [
   'Spear'
 ]
 
-const ACCESS_TOKEN = '###';
-
-const HTTP_OPTIONS = {
-  headers: new HttpHeaders({
-    'Authorization': `Bearer ${ACCESS_TOKEN}`,
-    'Access-Control-Allow-Origin': '*'
-  })
-};
-
 @Component({
   selector: 'gw2-item',
   templateUrl: './gw2-item.component.html',
@@ -97,20 +87,6 @@ const HTTP_OPTIONS = {
 })
 export class GW2Item {
   @Input() itemView: ItemView;
-
-  //@ViewChild('t') public tooltip: NgbTooltip;
-
-  //clicked = false
-
-  //showTooltip(click: boolean) {
-  //  this.tooltip.open();
-  //  if (!this.clicked && click)
-  //    this.clicked = true;
-  //}
-
-  //hideTooltip() {
-  //  if (!this.clicked) this.tooltip.close();
-  //}
 }
 
 class Column {
@@ -124,9 +100,7 @@ class Column {
 })
 export class AppComponent implements OnInit {
   title = 'app';
-  status: ApiStatus = {
-    status: 'notok'
-  };
+  apiKey = new FormControl('');
   characters = [];
   charactersData: Character[];
   itemMap = {}
@@ -151,6 +125,17 @@ export class AppComponent implements OnInit {
   }
 
   async ngOnInit() {
+    let apiKey = localStorage.getItem('apiKey');
+    if (apiKey) {
+      this.apiKey.setValue(apiKey);
+    }
+    await this.init();
+  }
+
+  async init() {
+    if (!this.apiKey.value) {
+      return;
+    }
     await this.getCharacters();
     await this.getInventories();
     await this.getStatsAndItems();
@@ -173,16 +158,16 @@ export class AppComponent implements OnInit {
   }
 
   async getCharacters() {
-    let characters = await this.http.get<string[]>(`https://api.guildwars2.com/v2/characters?access_token=${ACCESS_TOKEN}`).toPromise();
+    let characters = await this.http.get<string[]>(`https://api.guildwars2.com/v2/characters?access_token=${this.apiKey.value}`).toPromise();
     this.characters = characters;
   }
 
   async getInventories() {
-    let bankPromise = this.http.get<ItemView[]>(`https://api.guildwars2.com/v2/account/bank?access_token=${ACCESS_TOKEN}`).toPromise();
+    let bankPromise = this.http.get<ItemView[]>(`https://api.guildwars2.com/v2/account/bank?access_token=${this.apiKey.value}`).toPromise();
 
     let promises: Array<Promise<Character>> = [];
     for (let character of this.characters) {
-      promises.push(this.http.get<Character>(`https://api.guildwars2.com/v2/characters/${character}?access_token=${ACCESS_TOKEN}`).toPromise());
+      promises.push(this.http.get<Character>(`https://api.guildwars2.com/v2/characters/${character}?access_token=${this.apiKey.value}`).toPromise());
     }
 
     this.bank = await bankPromise;
@@ -419,6 +404,13 @@ export class AppComponent implements OnInit {
           this.ascendedMap[type].push(itemV);
         }
       }
+    }
+  }
+
+  async updateApiKey() {
+    if (this.apiKey.value) {
+      localStorage.setItem('apiKey', this.apiKey.value);
+      await this.init();
     }
   }
 
